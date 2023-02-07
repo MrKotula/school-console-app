@@ -1,21 +1,21 @@
-package ua.foxminded.entity;
+package ua.foxminded.schoolconsoleapp.entity;
 
 import java.util.Objects;
 
 public class Group {
-    private int groupId;
+    private Integer groupId;
     private String groupName;
     
-    public Group() {
-	
+    public Group(String groupName) {
+	this.groupName = groupName;
     }
-
-    public Group(int groupId, String groupName) {
+    
+    public Group(Integer groupId, String groupName) {
 	this.groupId = groupId;
 	this.groupName = groupName;
     }
 
-    public int getGroupId() {
+    public Integer getGroupId() {
         return groupId;
     }
 
@@ -23,7 +23,7 @@ public class Group {
         return groupName;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
 
@@ -38,15 +38,15 @@ public class Group {
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	Group other = (Group) obj;
 	
-	return Objects.equals(groupId, other.groupId) &&
+	return 	Objects.equals(groupId, other.groupId) &&
 		Objects.equals(groupName, other.groupName); 
     }
 
@@ -54,5 +54,4 @@ public class Group {
     public String toString() {
 	return "Group [groupId=" + groupId + '\'' + ", groupName=" + groupName + "]";
     }
-    
 }
