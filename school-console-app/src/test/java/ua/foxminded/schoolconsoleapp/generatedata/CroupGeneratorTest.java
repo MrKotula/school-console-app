@@ -21,10 +21,15 @@ class CroupGeneratorTest {
     @InjectMocks
     private Generator<Group> groupGenerator = new GroupGenerator(random);
     
+    private Group testGroup = Group.builder()
+	    .withGroupId(1)
+	    .withGroupName(TEST_GROUP_NAME)
+	    .build();
+    
     @Test
     void shouldReturnGeneratedTestGroup() {
 	List<Group> expectedGroup = new ArrayList<>();
-	expectedGroup.add(new Group(1, TEST_GROUP_NAME));
+	expectedGroup.add(testGroup);
 	List<Group> actualGroup = groupGenerator.generate(1);
 	
 	assertEquals(expectedGroup, actualGroup);

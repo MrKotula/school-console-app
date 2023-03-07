@@ -23,6 +23,7 @@ import ua.foxminded.schoolconsoleapp.generatedata.Generator;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
+    private static final String TEST_GROUP_NAME = "PL-29";
     private static final int NUMBERS_OF_GROUPS = 5;
     private static final int STUDENT_COUNT_EXCEPTION = 27;
     private static final String MESSAGE_GET_EXCEPTION = "Can't get groups";
@@ -38,8 +39,10 @@ class GroupServiceTest {
     private GroupService groupService = new GroupService(groupDao, groupGenerator);
     
     private List<Group> groups = new ArrayList<>();
-    private Group group = new Group("PL-29");
-    
+    private Group group = Group.builder()
+	    .withGroupName(TEST_GROUP_NAME)
+	    .build();
+
     @Test
     void shouldReturnTestGroups() {
 	groupService.createTestGroups(NUMBERS_OF_GROUPS);
@@ -77,7 +80,7 @@ class GroupServiceTest {
     @Test
     void givenAddedCourses_whenGenerateNumberCourses_thenCourseDaoIsCalledAsMuchTimeAsNumberCourses() {
 	for (int i = 0; i < NUMBERS_OF_GROUPS; i++) {
-            groups.add(new Group(MESSAGE_GET_EXCEPTION));
+            groups.add(group);
         }
 	
         when(groupGenerator.generate(NUMBERS_OF_GROUPS)).thenReturn(groups);

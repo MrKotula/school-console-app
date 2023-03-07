@@ -17,6 +17,8 @@ import ua.foxminded.schoolconsoleapp.entity.Student;
 class StudentGeneratorTest {
     private static final String FIRST_NAME = "Noah";
     private static final String LAST_NAME = "Doe";
+    private static final String TEST_FIRST_NAME = "Oliver";
+    private static final String TEST_LAST_NAME = "Smith";
     
     @Mock
     private Random random;
@@ -24,24 +26,36 @@ class StudentGeneratorTest {
     @InjectMocks
     private Generator<Student> studentGenerator = new StudentGenerator(random);
     
+    private Student testStudent = Student.builder()
+	    .withGroupId(1)
+	    .withFirstName(FIRST_NAME)
+	    .withLastName(LAST_NAME)
+	    .build();
+    
+    private Student testSecondStudent = Student.builder()
+	    .withFirstName(TEST_FIRST_NAME)
+	    .withLastName(TEST_LAST_NAME)
+	    .build();
+    
     @Test
     void shouldReturnGeneratedStudents() {
 	when(random.nextInt(anyInt())).thenReturn(1);
 	List<Student> expectedStudents = new ArrayList<>();
 	
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
-	expectedStudents.add(new Student(1, FIRST_NAME, LAST_NAME));
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
+	expectedStudents.add(testStudent);
 	
 	List<Student> actualStudent = studentGenerator.generate(11);
+	
 	assertEquals(expectedStudents, actualStudent);
     }   
     
@@ -50,9 +64,9 @@ class StudentGeneratorTest {
 	when(random.nextInt(anyInt())).thenReturn(2);
 	List<Student> expectedStudents = new ArrayList<>();
 	
-	expectedStudents.add(new Student("Oliver", "Smith"));
-	
+	expectedStudents.add(testSecondStudent);
 	List<Student> actualStudent = studentGenerator.generate(1);
+	
 	assertEquals(expectedStudents, actualStudent);
     } 
 }

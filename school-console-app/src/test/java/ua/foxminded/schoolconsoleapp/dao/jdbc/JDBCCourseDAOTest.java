@@ -20,6 +20,11 @@ import ua.foxminded.schoolconsoleapp.entity.Student;
 import ua.foxminded.schoolconsoleapp.exception.DAOException;
 
 class JDBCCourseDAOTest {
+    private static final String TEST_NAME = "John";
+    private static final String TEST_LAST_NAME = "Doe";
+    private static final String TEST_SECOND_NAME = "Jane";
+    private static final String TEST_SECOND_LAST_NAME = "Does";
+    
     private static final String PATH_TO_CREATE_SCHEMA_TEST = "test_schema.sql";
     private static final String PATH_TO_DELETE_SCHEMA_TEST = "drop_all_tables.sql";
     
@@ -37,6 +42,25 @@ class JDBCCourseDAOTest {
     private SqlScriptRunner sqlScriptRunner;
     private JDBCStudentDAO jdbcStudentDAO;
     
+    private Student testStudent = Student.builder()
+	    .withStudentId(1)
+	    .withGroupId(1)
+	    .withFirstName(TEST_NAME)
+	    .withLastName(TEST_LAST_NAME)
+	    .build();
+    
+    private Student testSecondStudent = Student.builder()
+	    .withStudentId(2)
+	    .withGroupId(3)
+	    .withFirstName(TEST_SECOND_NAME)
+	    .withLastName(TEST_SECOND_LAST_NAME)
+	    .build();
+    
+    private Course testCourseMath = Course.builder()
+	    .withCourseName("math")
+	    .withCourseDescription("course of Mathematics")
+	    .build();
+    
     @BeforeEach
     void generateTestData() throws DAOException, SQLException {
 	connectionProvider = new ConnectionProvider();
@@ -47,7 +71,7 @@ class JDBCCourseDAOTest {
 	
         sqlScriptRunner.runSqlScript(PATH_TO_CREATE_SCHEMA_TEST);
         
-        jdbcStudentDAO.add(new Student(1, 1, "Jonh", "Doe"));
+        jdbcStudentDAO.add(testStudent);
     }
 
     @AfterEach
@@ -60,7 +84,7 @@ class JDBCCourseDAOTest {
 
     @Test
     void saveShouldBeAddNewEntityIntoDataBase() throws SQLException {
-	Course expected = new Course("math", "course of Mathematics");
+	Course expected = testCourseMath;
 	jdbcCourseDAO.add(expected);
 	Course actual = jdbcCourseDAO.findById(3).get();
 
@@ -69,7 +93,12 @@ class JDBCCourseDAOTest {
 
     @Test
     void updateEntityShouldBeUpdateDateOfCourseIntoDataBase() {
-	Course expected = new Course(5, "math", "course of Mathematics");
+	Course expected = Course.builder()
+		.withCourseId(5)
+		.withCourseName("math")
+		.withCourseDescription("course of Mathematics")
+		.build();
+	
 	jdbcCourseDAO.update(expected);
 
 	assertEquals(expected.getCourseName(), jdbcCourseDAO.findById(1).get().getCourseName());
@@ -77,14 +106,14 @@ class JDBCCourseDAOTest {
 
     @Test
     void findAllEntityShouldBeReturnEntityFromDataBase() {
-	List<Course> expected = Arrays.asList(new Course("math", "course of Mathematics"));
+	List<Course> expected = Arrays.asList(testCourseMath);
 	
 	assertEquals(expected, jdbcCourseDAO.findAll(0, 1));
     }
 
     @Test
     void findByIdShouldBeReturnEntityFromDataBase() {
-	Course expected = new Course("math", "course of Mathematics");
+	Course expected = testCourseMath;
 	Course actual = jdbcCourseDAO.findById(1).get();
 
 	assertEquals(expected, actual);
@@ -100,10 +129,27 @@ class JDBCCourseDAOTest {
     
     @Test
     void getCoursesMissingForStudentIdTest() throws DAOException {
-	List<Course> expected = Arrays.asList(new Course(1, "math", "course of Mathematics"),
-		new Course(2, "biology", "course of Biology"), new Course(3, "physics", "course of Physics"));
-	Course cousre = new Course(3, "physics", "course of Physics");
-	jdbcCourseDAO.add(cousre);
+	Course testCourseMath = Course.builder()
+		    .withCourseId(1)
+		    .withCourseName("math")
+		    .withCourseDescription("course of Mathematics")
+		    .build();
+	    
+	Course testCourseBiology = Course.builder()
+		    .withCourseId(2)
+		    .withCourseName("biology")
+		    .withCourseDescription("course of Biology")
+		    .build();
+	    
+	Course testCourseChemistry = Course.builder()
+		    .withCourseId(3)
+		    .withCourseName("chemistry")
+		    .withCourseDescription("course of Chemistry")
+		    .build();
+	
+	List<Course> expected = Arrays.asList(testCourseMath,
+		testCourseBiology, testCourseChemistry);
+	jdbcCourseDAO.add(testCourseChemistry);
 	List<Course> actual = jdbcCourseDAO.getCoursesMissingForStudentId(1);
 
 	assertEquals(expected, actual);
@@ -112,7 +158,13 @@ class JDBCCourseDAOTest {
     @Test
     void getCoursesForStudentIdTest() throws DAOException {
 	 List<Course> courses = new ArrayList<>();
-         courses.add(new Course(1, "math", "course of Mathematics"));
+	 Course testCourse = Course.builder()
+		    .withCourseId(1)
+		    .withCourseName("math")
+		    .withCourseDescription("course of Mathematics")
+		    .build();
+	 
+         courses.add(testCourse);
          jdbcStudentDAO.addStudentCourse(5, 1);
          
          assertEquals(courses, jdbcCourseDAO.getCoursesForStudentId(5));
@@ -123,10 +175,8 @@ class JDBCCourseDAOTest {
     @Test
     void givenStudents_whenGetStudentsWithCourseMath_thenReturnStudent() throws DAOException {
 	List<Student> students = new ArrayList<>();
-	Student test = new Student(1, 1, "John", "Doe");
-	Student test1 = new Student(2, 3, "Jane", "Does");
-	students.add(test);
-	students.add(test1);
+	students.add(testStudent);
+	students.add(testSecondStudent);
 	jdbcStudentDAO.addStudentCourse(1, 1);
 	jdbcStudentDAO.addStudentCourse(2, 1);
 	
@@ -163,5 +213,4 @@ class JDBCCourseDAOTest {
 
 	assertEquals(MESSAGE_EXCEPTION_GET_ALL, exception.getMessage());
     }
-    
 }

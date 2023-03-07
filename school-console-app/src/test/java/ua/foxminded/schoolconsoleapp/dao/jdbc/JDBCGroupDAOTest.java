@@ -28,6 +28,21 @@ class JDBCGroupDAOTest {
     private ConnectionProvider connectionProvider;
     private JDBCGroupDAO jdbcGroupDAO;
     private SqlScriptRunner sqlScriptRunner;
+    private Group testGroup;
+    private Group testGroupFirst = Group.builder()
+		.withGroupId(1)
+		.withGroupName("OR-41")
+		.build();
+	
+    private Group testGroupSecond = Group.builder()
+		.withGroupId(2)
+		.withGroupName("GM-87")
+		.build();
+	
+    private Group testGroupThird = Group.builder()
+		.withGroupId(3)
+		.withGroupName("XI-12")
+		.build();
 
     @BeforeEach
     void generateTestData() throws DAOException, SQLException {
@@ -49,17 +64,21 @@ class JDBCGroupDAOTest {
 
     @Test
     void findAllEntityShouldBeReturnAllEntityFromDataBase() {
-	List<Group> expected = Arrays.asList(new Group(1, "OR-41"), new Group(2, "GM-87"), new Group(3, "XI-12"));
+	List<Group> expected = Arrays.asList(testGroupFirst, testGroupSecond, testGroupThird);
 
 	assertEquals(expected, jdbcGroupDAO.findAll(0, 3));
     }
 
     @Test
     void givenGroup_whenAddGroup_thenReturnAddedGroup() throws DAOException {
-	Group group = new Group(4, "s");
-	jdbcGroupDAO.add(group);
+	testGroup = Group.builder()
+		.withGroupId(4)
+		.withGroupName("s")
+		.build();
+	
+	jdbcGroupDAO.add(testGroup);
 
-	assertEquals(group, jdbcGroupDAO.findById(4).get());
+	assertEquals(testGroup, jdbcGroupDAO.findById(4).get());
     }
 
     @Test
@@ -72,15 +91,19 @@ class JDBCGroupDAOTest {
 
     @Test
     void updateEntityShouldBeUpdateDataIntoDatabase() {
-	Group group = new Group(3, "S");
-	jdbcGroupDAO.update(group);
+	testGroup = Group.builder()
+		.withGroupId(3)
+		.withGroupName("S")
+		.build();
 
-	assertEquals(group, jdbcGroupDAO.findById(3).orElse(null));
+	jdbcGroupDAO.update(testGroup);
+
+	assertEquals(testGroup, jdbcGroupDAO.findById(3).orElse(null));
     }
 
     @Test
     void findLessQuantityStudentsShouldBeReturnGroupsWithLessQuantityStudents() throws DAOException {
-	List<Group> expected = Arrays.asList(new Group(2, "GM-87"), new Group(3, "XI-12"), new Group(1, "OR-41"));
+	List<Group> expected = Arrays.asList(testGroupSecond,testGroupThird, testGroupFirst);
 
 	assertEquals(expected, jdbcGroupDAO.getGroupsWithLessEqualsStudentCount(2));
     }

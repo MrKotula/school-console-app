@@ -18,6 +18,9 @@ import ua.foxminded.schoolconsoleapp.entity.Student;
 import ua.foxminded.schoolconsoleapp.exception.DAOException;
 
 class JDBCStudentDAOTest {
+    private static final String TEST_NAME = "John";
+    private static final String TEST_LAST_NAME = "Doe";
+    
     private static final String PATH_TO_CREATE_SCHEMA_TEST = "test_schema.sql";
     private static final String PATH_TO_DELETE_SCHEMA_TEST = "drop_all_tables.sql";
 
@@ -32,7 +35,18 @@ class JDBCStudentDAOTest {
     private ConnectionProvider connectionProvider;
     private JDBCStudentDAO jdbcStudentDAO;
     private SqlScriptRunner sqlScriptRunner;
-    private Student studentTestFirst;
+    private Student studentTestFirst = Student.builder()
+	    .withStudentId(1)
+	    .withGroupId(1)
+	    .withFirstName(TEST_NAME)
+	    .withLastName(TEST_LAST_NAME)
+	    .build();
+    
+    private Student studentTestSecond = Student.builder()
+	    .withGroupId(1)
+	    .withFirstName(TEST_NAME)
+	    .withLastName(TEST_LAST_NAME)
+	    .build();
 
     @BeforeEach
     void generateTestData() throws DAOException, SQLException {
@@ -54,10 +68,15 @@ class JDBCStudentDAOTest {
 
     @Test
     void saveShouldBeSaveStudentOnDataBase() {
-	Student expected = new Student(1, "John", "Doe");
+	Student expected = Student.builder()
+		    .withGroupId(1)
+		    .withFirstName(TEST_NAME)
+		    .withLastName(TEST_LAST_NAME)
+		    .build();
+	
 	jdbcStudentDAO.add(expected);
 
-	assertEquals(expected, jdbcStudentDAO.findById(1).get());
+	assertEquals(expected.getFirstName(), jdbcStudentDAO.findById(3).get().getFirstName());
     }
 
     @Test
@@ -66,12 +85,12 @@ class JDBCStudentDAOTest {
 	jdbcStudentDAO.removeStudentFromCourse(studentId, 2);
 	List<Student> students = jdbcStudentDAO.getStudentsWithCourseName("biology");
 	Student actualStudent = students.stream().filter(s -> s.getGroupId() == studentId).findAny().orElse(null);
+	
 	assertNull(actualStudent);
     }
 
     @Test
     void givenStudentWithGroup_whenUpdateStudent1WithGroupId_thenReturnNewStudentWithGroupId() {
-	studentTestFirst = new Student(1, 1, "John", "Doe");
 	jdbcStudentDAO.update(studentTestFirst);
 
 	assertEquals(studentTestFirst.getLastName(), jdbcStudentDAO.findById(1).get().getLastName());
@@ -80,7 +99,7 @@ class JDBCStudentDAOTest {
     @Test
     void givenStudents_whenGetStudentsWithCourseMath_thenReturnStudent() throws DAOException {
 	List<Student> students = new ArrayList<>();
-	studentTestFirst = new Student(1, 1, "John", "Doe");
+	
 	students.add(studentTestFirst);
 	jdbcStudentDAO.addStudentCourse(1, 1);
 

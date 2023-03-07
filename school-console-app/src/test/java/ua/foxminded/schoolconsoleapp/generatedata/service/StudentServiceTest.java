@@ -51,7 +51,12 @@ class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
     
-    private Student student;
+    private Student student = Student.builder()
+	    .withGroupId(DEFAULT_GROUP_ID)
+	    .withFirstName(TEST_FIRST_NAME)
+	    .withLastName(TEST_LAST_NAME)
+	    .build();
+    
     private List<Student> listOfStudents = new ArrayList<>();
     
     @Test
@@ -63,12 +68,12 @@ class StudentServiceTest {
     @Test
     void shouldReturnList_whenAddStudent_thenNumberCallsDao() {
         for (int i = 0; i < NUMBER_OF_STUDENTS; i++) {
-            listOfStudents.add(new Student());
+            listOfStudents.add(student);
         }
         
         when(studentGenerator.generate(NUMBER_OF_STUDENTS)).thenReturn(listOfStudents);
         studentService.createTestStudents(NUMBER_OF_STUDENTS);
-        verify(studentDao, times(NUMBER_OF_STUDENTS)).add(new Student());
+        verify(studentDao, times(NUMBER_OF_STUDENTS)).add(student);
     }
     
     @Test
@@ -90,12 +95,11 @@ class StudentServiceTest {
     @Test
     void givenCreationOfStudent_whenAddStudent_thenCallStudentDaoAddMethodWithRightArgument() {
         studentService.createStudent(TEST_FIRST_NAME, TEST_LAST_NAME);
-        verify(studentDao, times(1)).add(new Student(DEFAULT_GROUP_ID, TEST_FIRST_NAME, TEST_LAST_NAME));
+        verify(studentDao, times(1)).add(student);
     }
     
     @Test
     void  givenDaoExceprion_whenCreateStudent_thenThrowDomainException() {
-	student = new Student(DEFAULT_GROUP_ID, TEST_FIRST_NAME, TEST_LAST_NAME);
         doThrow(DomainException.class).when(studentDao).add(student);
         Exception exception = assertThrows(DomainException.class, () -> studentService.createStudent(TEST_FIRST_NAME, TEST_LAST_NAME));
         String expectedMessage = String.format(MESSAGE_CREATE_EXCEPTION, student);
@@ -105,7 +109,10 @@ class StudentServiceTest {
     
     @Test
     void shouldDeleteStudentFromBaseById() {
-	student = new Student(TEST_STUDENT_ID);
+	student = Student.builder()
+		.withStudentId(TEST_STUDENT_ID)
+		.build();
+		
 	studentService.deleteById(TEST_STUDENT_ID);
 	
 	verify(studentDao, times(1)).deleteById(TEST_STUDENT_ID);
@@ -115,9 +122,9 @@ class StudentServiceTest {
     void shouldReturnDomainExceptionWhenDeleteStudentById() {
 	doThrow(new DomainException()).when(studentDao).deleteById(any());
 	DomainException exception = assertThrows(DomainException.class, () -> studentService.deleteById(TEST_STUDENT_ID));
-	verify(studentDao, times(1)).deleteById(TEST_STUDENT_ID);
 	
 	assertEquals(MESSAGE_DELETE_EXCEPTION, exception.getMessage());
+	verify(studentDao, times(1)).deleteById(TEST_STUDENT_ID);
     }
     
     @Test
@@ -130,9 +137,9 @@ class StudentServiceTest {
     void shouldReturnDomainExceptionWhenAddStudentToCourse() throws DAOException {
 	doThrow(DAOException.class).when(studentDao).addStudentCourse(anyInt(), anyInt());
 	DomainException exception = assertThrows(DomainException.class, () -> studentService.addStudentToCourse(TEST_STUDENT_ID, TEST_COURSE_ID));
-	verify(studentDao, times(1)).addStudentCourse(TEST_STUDENT_ID, TEST_COURSE_ID);
 	
 	assertEquals(MESSAGE_ADD_STUDENT_COURSE_EXCEPTION, exception.getMessage());
+	verify(studentDao, times(1)).addStudentCourse(TEST_STUDENT_ID, TEST_COURSE_ID);
     }
     
     @Test
@@ -146,9 +153,9 @@ class StudentServiceTest {
 	doThrow(DAOException.class).when(studentDao).removeStudentFromCourse(anyInt(), anyInt());
 	DomainException exception = assertThrows(DomainException.class, () -> studentService.removeStudentFromCourse(TEST_STUDENT_ID, TEST_COURSE_ID));
 	String expectedMessage = String.format(MASK_MESSAGE_DELETE_STUDENT_COURSE_EXCEPTION, TEST_STUDENT_ID, TEST_COURSE_ID);
-	verify(studentDao, times(1)).removeStudentFromCourse(TEST_STUDENT_ID, TEST_COURSE_ID);
 	
 	assertEquals(expectedMessage, exception.getMessage());
+	verify(studentDao, times(1)).removeStudentFromCourse(TEST_STUDENT_ID, TEST_COURSE_ID);
     }
     
     @Test
@@ -157,6 +164,7 @@ class StudentServiceTest {
 	for(int i = 0; i < NUMBER_OF_STUDENTS; i++) {
 	    studentService.createTestStudentsCourses(i);
 	}
+	
 	verify(studentGenerator, times(1)).generate(NUMBER_OF_STUDENTS);
 	verify(studentDao, times(10)).addStudentCourse(anyInt(), anyInt());
     }
@@ -166,9 +174,9 @@ class StudentServiceTest {
 	doThrow(DAOException.class).when(studentDao).addStudentCourse(anyInt(), anyInt());
 	DomainException exception = assertThrows(DomainException.class, () -> studentService.createTestStudentsCourses(NUMBER_OF_STUDENTS));
 	String expectedMessage = String.format(MASK_MESSAGE_ADD_STUDENT_COURSE_EXCEPTION, 1, 1);
-	verify(studentDao, times(1)).addStudentCourse(anyInt(), anyInt());
 	
 	assertEquals(expectedMessage, exception.getMessage());
+	verify(studentDao, times(1)).addStudentCourse(anyInt(), anyInt());
     }
     
 }

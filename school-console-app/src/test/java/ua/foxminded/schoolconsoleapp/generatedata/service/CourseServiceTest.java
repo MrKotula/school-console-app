@@ -23,6 +23,8 @@ import ua.foxminded.schoolconsoleapp.generatedata.Generator;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceTest {
+    private static final String TEST_COURSE_NAME = "math";
+    private static final String TEST_COURSE_DISCRIPTION = "math";
     private static final int NUMBER_OF_COURSES = 5;
     private static final int STUDENT_ID_EXCEPTION = 6;
     private static final String EXCEPTION_MESSAGE = "Can't get courses";
@@ -41,7 +43,10 @@ class CourseServiceTest {
     private JDBCCourseDAO jdbcCourseDAO;
     
     private List<Course> listOfCourses = new ArrayList<>();
-    private Course course = new Course("math", "course of math");
+    private Course course = Course.builder()
+	    .withCourseName(TEST_COURSE_NAME)
+	    .withCourseDescription(TEST_COURSE_DISCRIPTION)
+	    .build();
     
     @Test
     void shouldReturnTestCourses() {
