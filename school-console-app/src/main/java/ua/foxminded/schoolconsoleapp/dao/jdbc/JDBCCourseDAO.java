@@ -30,6 +30,8 @@ public class JDBCCourseDAO extends AbstractJdbcDAO<Course> implements CourseDAO 
     private static final String FIELD_COURSE_DESCRIPTION = "course_description";
     private static final String MESSAGE_EXCEPTION_GET_ALL = "Can't get courses";
     
+    private Course course;
+    
     public JDBCCourseDAO(ConnectionProvider connector) {
 	super(connector, PROPERTY_COURSE_ADD, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL, PROPERTY_COURSE_UPDATE, PROPERTY_COURSE_DELETE);
     }
@@ -43,10 +45,11 @@ public class JDBCCourseDAO extends AbstractJdbcDAO<Course> implements CourseDAO 
 	    try (ResultSet resultSet = statement.executeQuery()) {
 		
 		while (resultSet.next()) {
-		    Course course = new Course();
-		    course.setCourseId(resultSet.getInt(FIELD_COURSE_ID));
-		    course.setCourseName(resultSet.getString(FIELD_COURSE_NAME));
-		    course.setCourseDescription(resultSet.getString(FIELD_COURSE_DESCRIPTION));
+		    course = Course.builder()
+		    .withCourseId(resultSet.getInt(FIELD_COURSE_ID))
+		    .withCourseName(resultSet.getString(FIELD_COURSE_NAME))
+		    .withCourseDescription(resultSet.getString(FIELD_COURSE_DESCRIPTION))
+		    .build();
 
 		    courses.add(course);
 		}
@@ -66,11 +69,12 @@ public class JDBCCourseDAO extends AbstractJdbcDAO<Course> implements CourseDAO 
 	    try (ResultSet resultSet = statement.executeQuery()) {
 		
 		while (resultSet.next()) {
-		    Course course = new Course();
-		    course.setCourseId(resultSet.getInt(FIELD_COURSE_ID));
-		    course.setCourseName(resultSet.getString(FIELD_COURSE_NAME));
-		    course.setCourseDescription(resultSet.getString(FIELD_COURSE_DESCRIPTION));
-
+		    course = Course.builder()
+			    .withCourseId(resultSet.getInt(FIELD_COURSE_ID))
+			    .withCourseName(resultSet.getString(FIELD_COURSE_NAME))
+			    .withCourseDescription(resultSet.getString(FIELD_COURSE_DESCRIPTION))
+			    .build();
+		    
 		    courses.add(course);
 		}
 	    }
@@ -82,8 +86,12 @@ public class JDBCCourseDAO extends AbstractJdbcDAO<Course> implements CourseDAO 
 
     @Override
     protected Course mapResultSetToEntity(ResultSet resultSet) throws SQLException {
-	return new Course(resultSet.getString(FIELD_COURSE_NAME),
-		resultSet.getString(FIELD_COURSE_DESCRIPTION));
+	course = Course.builder()
+		.withCourseName(resultSet.getString(FIELD_COURSE_NAME))
+		.withCourseDescription(resultSet.getString(FIELD_COURSE_DESCRIPTION))
+		.build();
+	
+	return course;
     }
 
     @Override

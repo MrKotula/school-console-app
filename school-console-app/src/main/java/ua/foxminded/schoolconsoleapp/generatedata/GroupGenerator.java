@@ -13,29 +13,33 @@ public class GroupGenerator implements Generator<Group> {
     private Random random;
 
     public GroupGenerator(Random random) {
-        this.random = random;
+	this.random = random;
     }
 
     public List<Group> generate(int numberGroups) {
-        List<Group> groups = new ArrayList<>();
-        
-        for (int i = 0; i < numberGroups; i++) {
-            Group group = new Group(generateName());
-            group.setGroupId(i + 1);
-            groups.add(group);
-        }
-        
-        return groups;
+	List<Group> groups = new ArrayList<>();
+
+	for (int i = 0; i < numberGroups; i++) {
+	    Group group = Group.builder()
+		    .withGroupName(generateName())
+		    .build();
+	    
+	    group.setGroupId(i + 1);
+	    groups.add(group);
+	}
+
+	return groups;
     }
 
     private String generateName() {
-        int targetStringLength = 2;
+	int targetStringLength = 2;
 
-        String leftPartName = random.ints(NUMBER_CHAR_A, NUMBER_CHAR_Z + 1)
-                .limit(targetStringLength).collect(StringBuilder::new,
-                        StringBuilder::appendCodePoint, StringBuilder::append).toString();
-        int rightPartName = random.nextInt(101);
+	String leftPartName = random.ints(NUMBER_CHAR_A, NUMBER_CHAR_Z + 1)
+		.limit(targetStringLength)
+		.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+		.toString();
+	int rightPartName = random.nextInt(101);
 
-        return String.format(FORMAT_MASK, leftPartName, rightPartName);
+	return String.format(FORMAT_MASK, leftPartName, rightPartName);
     }
 }

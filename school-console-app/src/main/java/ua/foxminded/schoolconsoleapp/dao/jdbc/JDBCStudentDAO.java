@@ -30,6 +30,8 @@ public class JDBCStudentDAO extends AbstractJdbcDAO<Student> implements StudentD
     private static final String MESSAGE_EXCEPTION_GET_ALL = "Can't get students";
     private static final String MESSAGE_EXCEPTION_ADD_STUDENT_COURSE = "Can't add pair student-course";
     private static final String MESSAGE_EXCEPTION_DELETE_STUDENT_COURSE = "Can't delete student %d from course %d";
+    
+    private Student student;
 
     public JDBCStudentDAO(ConnectionProvider connectionProvider) {
 	super(connectionProvider, PROPERTY_STUDENT_ADD, PROPERTY_STUDENT_GET_BY_ID, PROPERTY_STUDENT_GET_ALL, PROPERTY_STUDENT_UPDATE, PROPERTY_STUDENT_DELETE);
@@ -69,11 +71,12 @@ public class JDBCStudentDAO extends AbstractJdbcDAO<Student> implements StudentD
 	    try (ResultSet resultSet = statement.executeQuery()) {
 
 		while (resultSet.next()) {
-		    Student student = new Student();
-		    student.setStudentId(resultSet.getInt(FIELD_STUDENT_ID));
-		    student.setGroupId(resultSet.getInt(FIELD_GROUP_ID));
-		    student.setFirstName(resultSet.getString(FIELD_FIRST_NAME));
-		    student.setLastName(resultSet.getString(FIELD_LAST_NAME));
+		    student = Student.builder()
+			    .withStudentId(resultSet.getInt(FIELD_STUDENT_ID))
+			    .withGroupId(resultSet.getInt(FIELD_GROUP_ID))
+			    .withFirstName(resultSet.getString(FIELD_FIRST_NAME))
+			    .withLastName(resultSet.getString(FIELD_LAST_NAME))
+			    .build();
 
 		    students.add(student);
 		}
@@ -87,9 +90,12 @@ public class JDBCStudentDAO extends AbstractJdbcDAO<Student> implements StudentD
 
     @Override
     protected Student mapResultSetToEntity(ResultSet resultSet) throws SQLException {
-	return new Student(resultSet.getInt(FIELD_GROUP_ID),
-		resultSet.getString(FIELD_FIRST_NAME),
-		resultSet.getString(FIELD_LAST_NAME));
+	student = Student.builder()
+		    .withFirstName(resultSet.getString(FIELD_FIRST_NAME))
+		    .withLastName(resultSet.getString(FIELD_LAST_NAME))
+		    .build();
+	
+	return student;
     }
 
     @Override

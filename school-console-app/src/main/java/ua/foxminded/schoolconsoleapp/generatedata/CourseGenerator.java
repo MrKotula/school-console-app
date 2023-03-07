@@ -19,7 +19,10 @@ public class CourseGenerator implements Generator<Course> {
 	return lines.stream()
 		.map(line -> line.split(DELIMITER))
 		.limit(number)
-		.map(arr -> new Course(arr[COURSE_NAME], arr[COURSE_DESCRIPTION]))
+		.map(arr -> Course.builder()
+		.withCourseName(arr[COURSE_NAME])
+		.withCourseDescription(arr[COURSE_DESCRIPTION])
+		.build())
 		.collect(Collectors.toList());
     }
 }

@@ -11,6 +11,8 @@ import ua.foxminded.schoolconsoleapp.reader.Reader;
 public class StudentGenerator implements Generator<Student> {
     private static final String FILENAME_FIRST_NAMES_DATA = "src/main/resources/student_first_names.txt";
     private static final String FILENAME_LAST_NAMES_DATA = "src/main/resources/student_last_names.txt";
+    private static final int STUDENT_FIRST_NAME = 0;
+    private static final int STUDENT_LAST_NAME = 1;
     
     private static final int AMOUNT_OF_STUDENTS = 20;
     private static final int MIN_GROUP_SIZE = 19;
@@ -28,10 +30,13 @@ public class StudentGenerator implements Generator<Student> {
 
 	for (int i = 0; i < amountOfStudents; i++) {
 	    String[] studentsNames = createStudentNames();
-	    Student student = new Student(studentsNames[0], studentsNames[1]);
+	    Student student = Student.builder()
+		    .withFirstName(studentsNames[STUDENT_FIRST_NAME])
+		    .withLastName(studentsNames[STUDENT_LAST_NAME])
+		    .build();
+		    
 	    students.add(student);
 	}
-
 	return splitStudentsToGroups(students);
     }
     

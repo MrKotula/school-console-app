@@ -25,6 +25,8 @@ public class JDBCGroupDAO extends AbstractJdbcDAO<Group> implements GroupDAO {
     private static final String FIELD_GROUP_ID = "group_id";
     private static final String FIELD_GROUP_NAME = "group_name";
     private static final String MESSAGE_EXCEPTION_GET_ALL = "Can't get groups";
+    
+    private Group group;
 
     public JDBCGroupDAO(ConnectionProvider connector) {
 	super(connector, PROPERTY_GROUP_ADD, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL, PROPERTY_GROUP_UPDATE,
@@ -39,7 +41,11 @@ public class JDBCGroupDAO extends AbstractJdbcDAO<Group> implements GroupDAO {
 	    statement.setInt(1, studentCount);
 	    try (ResultSet resultSet = statement.executeQuery()) {
 		while (resultSet.next()) {
-		    Group group = new Group(resultSet.getInt(FIELD_GROUP_ID), resultSet.getString(FIELD_GROUP_NAME));
+		    group = Group.builder()
+			    .withGroupId(resultSet.getInt(FIELD_GROUP_ID))
+			    .withGroupName(resultSet.getString(FIELD_GROUP_NAME))
+			    .build();
+		    
 		    groups.add(group);
 		}
 	    }
@@ -51,7 +57,12 @@ public class JDBCGroupDAO extends AbstractJdbcDAO<Group> implements GroupDAO {
 
     @Override
     protected Group mapResultSetToEntity(ResultSet resultSet) throws SQLException {
-	return new Group(resultSet.getInt(FIELD_GROUP_ID), resultSet.getString(FIELD_GROUP_NAME));
+	group = Group.builder()
+		    .withGroupId(resultSet.getInt(FIELD_GROUP_ID))
+		    .withGroupName(resultSet.getString(FIELD_GROUP_NAME))
+		    .build();
+	
+	return group;
     }
 
     @Override

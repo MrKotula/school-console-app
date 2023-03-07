@@ -55,8 +55,12 @@ public class StudentService {
     }
 
     public void createStudent(String firstName, String lastName) {
-	Student student = new Student(firstName, lastName);
-	student.setGroupId(DEFAULT_GROUP_ID);
+	Student student = Student.builder()
+		.withFirstName(firstName)
+		.withLastName(lastName)
+		.withGroupId(DEFAULT_GROUP_ID)
+		.build();
+		
 	addStudentToBase(student);
     }
 
@@ -100,7 +104,7 @@ public class StudentService {
 	Collections.addAll(coursesId, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 	for (int i = 0; i < numberCoursesPerStudent; i++) {
 	    int numberCourse = random.nextInt(coursesId.size());
-	    Integer[] studentCourse = { studentId, coursesId.get(numberCourse) };
+	    Integer[] studentCourse = { studentId, coursesId.get(numberCourse)};
 	    studentCourses.add(studentCourse);
 	    coursesId.remove(numberCourse);
 	}
