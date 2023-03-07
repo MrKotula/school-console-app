@@ -7,20 +7,15 @@ public class Course {
     private String courseName;
     private String courseDescription;
     
-    public Course() {
-
+    private Course(Builder builder) {
+	this.courseId = builder.courseId;
+	this.courseName = builder.courseName;
+	this.courseDescription = builder.courseDescription;
     }
     
-    public Course(String courseName, String courseDescription) {
-	this.courseName = courseName;
-	this.courseDescription = courseDescription;
+    public static Builder builder() {
+	return new Builder();
     }
-    
-    public Course(Integer courseId, String courseName, String courseDescription) {
-	this.courseId = courseId;
-   	this.courseName = courseName;
-   	this.courseDescription = courseDescription;
-       }
 
     public Integer getCourseId() {
         return courseId;
@@ -70,5 +65,34 @@ public class Course {
     public String toString() {
 	return "Course [courseId=" + courseId + '\'' + ", courseName=" + courseName + '\'' + ", courseDescription="
 		+ courseDescription + "]";
+    }
+    
+    public static class Builder {
+	private Integer courseId;
+	private String courseName;
+	private String courseDescription;
+	
+	private Builder() {
+	    
+	}
+	
+	public Builder withCourseId(Integer courseId) {
+	    this.courseId = courseId;
+	    return this;
+	}
+	
+	public Builder withCourseName(String courseName) {
+	    this.courseName = courseName;
+	    return this;
+	}
+	
+	public Builder withCourseDescription(String courseDescription) {
+	    this.courseDescription = courseDescription;
+	    return this;
+	}
+	
+	public Course build() {
+	    return new Course(this);
+	}
     }
 }

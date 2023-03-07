@@ -6,13 +6,13 @@ public class Group {
     private Integer groupId;
     private String groupName;
     
-    public Group(String groupName) {
-	this.groupName = groupName;
+    public Group(Builder builder) {
+	this.groupId = builder.groupId;
+	this.groupName = builder.groupName;
     }
     
-    public Group(Integer groupId, String groupName) {
-	this.groupId = groupId;
-	this.groupName = groupName;
+    public static Builder builder() {
+	return new Builder();
     }
 
     public Integer getGroupId() {
@@ -53,5 +53,28 @@ public class Group {
     @Override
     public String toString() {
 	return "Group [groupId=" + groupId + '\'' + ", groupName=" + groupName + "]";
+    }
+    
+    public static class Builder {
+	private Integer groupId;
+	private String groupName;
+	
+	private Builder() {
+	    
+	}
+	
+	public Builder withGroupId(Integer groupId) {
+	    this.groupId = groupId;
+	    return this;
+	}
+	
+	public Builder withGroupName(String groupName) {
+	    this.groupName = groupName;
+	    return this;
+	}
+	
+	public Group build() {
+	    return new Group(this);
+	}
     }
 }
