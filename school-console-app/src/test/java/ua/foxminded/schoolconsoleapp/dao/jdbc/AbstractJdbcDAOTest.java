@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import ua.foxminded.schoolconsoleapp.dao.ConnectionProvider;
 import ua.foxminded.schoolconsoleapp.entity.Student;
+import ua.foxminded.schoolconsoleapp.exception.DAOException;
 import ua.foxminded.schoolconsoleapp.exception.DomainException;
 
 class AbstractJdbcDAOTest {
@@ -101,7 +102,7 @@ class AbstractJdbcDAOTest {
 	when(connectionMocked.prepareStatement(PROPERTY_STUDENT_GET_BY_ID)).thenThrow(new SQLException());
 	JDBCStudentDAO jdbcStudentDAOMocked = new JDBCStudentDAO(connectionProviderMocked);
 
-	assertThrows(DomainException.class, () -> jdbcStudentDAOMocked.findById(1));
+	assertThrows(DAOException.class, () -> jdbcStudentDAOMocked.findById(1));
 	verify(connectionMocked, times(1)).prepareStatement(PROPERTY_STUDENT_GET_BY_ID);  
     }
 }

@@ -41,15 +41,9 @@ class JDBCStudentDAOTest {
 	    .withFirstName(TEST_NAME)
 	    .withLastName(TEST_LAST_NAME)
 	    .build();
-    
-    private Student studentTestSecond = Student.builder()
-	    .withGroupId(1)
-	    .withFirstName(TEST_NAME)
-	    .withLastName(TEST_LAST_NAME)
-	    .build();
 
     @BeforeEach
-    void generateTestData() throws DAOException, SQLException {
+    void generateTestData() throws DAOException, SQLException, ClassNotFoundException {
 	connectionProvider = new ConnectionProvider();
 	jdbcStudentDAO = new JDBCStudentDAO(connectionProvider);
 	Connection connection = connectionProvider.getConnection();

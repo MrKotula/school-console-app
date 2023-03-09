@@ -59,8 +59,8 @@ class StartDAOTest {
     }
 
     @Test
-    void givenPrepareTablesMethod_whenGetAll_thenEmptyTableGroupsCreated() throws DAOException {
-        startDAO.prepareTables();
+    void givenPrepareTablesMethod_whenGetAll_thenEmptyTableGroupsCreated() throws DAOException, ClassNotFoundException {
+        startDAO = new StartDAO();
 
         List<Group> expectedGroups = new ArrayList<>();
         JDBCGroupDAO groupDao = new JDBCGroupDAO(connectionProvider);
@@ -70,8 +70,8 @@ class StartDAOTest {
     }
     
     @Test
-    void givenPrepareTablesMethod_whenGetAll_thenEmptyTableStudentsCreated() throws DAOException {
-        startDAO.prepareTables();
+    void givenPrepareTablesMethod_whenGetAll_thenEmptyTableStudentsCreated() throws DAOException, ClassNotFoundException {
+	startDAO = new StartDAO();
 
         List<Student> expectedGroups = new ArrayList<>();
         JDBCStudentDAO studentDAO = new JDBCStudentDAO(connectionProvider);
@@ -81,8 +81,8 @@ class StartDAOTest {
     }
     
     @Test
-    void givenPrepareTablesMethod_whenGetAll_thenEmptyTableCoursesCreated() throws DAOException {
-        startDAO.prepareTables();
+    void givenPrepareTablesMethod_whenGetAll_thenEmptyTableCoursesCreated() throws DAOException, ClassNotFoundException {
+	startDAO = new StartDAO();
 
         List<Course> expectedGroups = new ArrayList<>();
         JDBCCourseDAO courseDAO = new JDBCCourseDAO(connectionProvider);

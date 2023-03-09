@@ -45,7 +45,7 @@ class JDBCGroupDAOTest {
 		.build();
 
     @BeforeEach
-    void generateTestData() throws DAOException, SQLException {
+    void generateTestData() throws DAOException, SQLException, ClassNotFoundException {
 	connectionProvider = new ConnectionProvider();
 	jdbcGroupDAO = new JDBCGroupDAO(connectionProvider);
 	Connection connection = connectionProvider.getConnection();

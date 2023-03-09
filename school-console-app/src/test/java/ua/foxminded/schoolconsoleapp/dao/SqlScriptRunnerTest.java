@@ -10,11 +10,12 @@ import ua.foxminded.schoolconsoleapp.exception.DAOException;
 class SqlScriptRunnerTest {
     private static final String MASK_EXCEPTION = "Script %s not found!";
     
-    private ConnectionProvider connectionProvider = new ConnectionProvider();
+    private ConnectionProvider connectionProvider;
     private SqlScriptRunner sqlScriptRunner;
     
     @Test
-    void shouldReturnDaoExceptionIfScriptIsNull( ) throws DAOException, SQLException {
+    void shouldReturnDaoExceptionIfScriptIsNull( ) throws DAOException, SQLException, ClassNotFoundException {
+	connectionProvider = new ConnectionProvider();
 	Connection connection = connectionProvider.getConnection(); 
 	sqlScriptRunner = new SqlScriptRunner(connection);
 	Exception exception = assertThrows(DAOException.class, () -> sqlScriptRunner.runSqlScript(null));

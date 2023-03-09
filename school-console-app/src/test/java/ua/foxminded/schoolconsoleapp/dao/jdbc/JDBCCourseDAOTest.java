@@ -62,7 +62,7 @@ class JDBCCourseDAOTest {
 	    .build();
     
     @BeforeEach
-    void generateTestData() throws DAOException, SQLException {
+    void generateTestData() throws DAOException, SQLException, ClassNotFoundException {
 	connectionProvider = new ConnectionProvider();
 	jdbcCourseDAO = new JDBCCourseDAO(connectionProvider);
 	jdbcStudentDAO = new JDBCStudentDAO(connectionProvider);
