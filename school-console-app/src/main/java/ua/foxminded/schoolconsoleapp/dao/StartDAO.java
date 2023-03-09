@@ -14,18 +14,22 @@ public class StartDAO {
 	    + "DROP TABLE IF EXISTS schedule.students CASCADE; " + LINE_SEPARATOR + "DROP TABLE IF EXISTS schedule.courses CASCADE;"
 	    + LINE_SEPARATOR + "DROP TABLE IF EXISTS students_courses CASCADE;";
 
-    private static final String FILENAME_SCRIPT_CREATE_TABLES = "SCHEMA_TABLE_SQL";
+    private static final String FILENAME_SCRIPT_CREATE_TABLES = "schema.sql";
     private static final String MESSAGE_TABLES_READY = "Tables are ready";
     
     private ConnectionProvider connectionProvider;
+    
+    public StartDAO() throws ClassNotFoundException, DAOException {
+	prepareTable();
+    }
 
-    public void prepareTables() throws DAOException {
-	deleteTables();
-	createTables(FILENAME_SCRIPT_CREATE_TABLES);
+    public void prepareTable() throws DAOException, ClassNotFoundException {
+	deleteTable();
+	createTable(FILENAME_SCRIPT_CREATE_TABLES);
 	System.out.println(MESSAGE_TABLES_READY);
     }
 
-    private void deleteTables() throws DAOException {
+    private void deleteTable() throws DAOException, ClassNotFoundException {
 	connectionProvider = new ConnectionProvider();
 	String sqlCommands = PROPERTY_SQL_DELETE_TABLES;
 
@@ -46,7 +50,7 @@ public class StartDAO {
 	}
     }
 
-    private void createTables(String scriptFilename) throws DAOException {
+    private void createTable(String scriptFilename) throws DAOException, ClassNotFoundException {
 	connectionProvider = new ConnectionProvider();
 	try (Connection connection = connectionProvider.getConnection()) {
 
