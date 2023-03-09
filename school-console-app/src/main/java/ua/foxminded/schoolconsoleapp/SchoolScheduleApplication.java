@@ -1,6 +1,7 @@
 package ua.foxminded.schoolconsoleapp;
 
 import java.util.Random;
+import ua.foxminded.schoolconsoleapp.applicationfacade.ApplicationFacade;
 import ua.foxminded.schoolconsoleapp.dao.ConnectionProvider;
 import ua.foxminded.schoolconsoleapp.dao.CourseDAO;
 import ua.foxminded.schoolconsoleapp.dao.GroupDAO;
@@ -12,7 +13,7 @@ import ua.foxminded.schoolconsoleapp.dao.jdbc.JDBCStudentDAO;
 import ua.foxminded.schoolconsoleapp.entity.Course;
 import ua.foxminded.schoolconsoleapp.entity.Group;
 import ua.foxminded.schoolconsoleapp.entity.Student;
-import ua.foxminded.schoolconsoleapp.facade.Facade;
+import ua.foxminded.schoolconsoleapp.exception.DAOException;
 import ua.foxminded.schoolconsoleapp.generatedata.CourseGenerator;
 import ua.foxminded.schoolconsoleapp.generatedata.Generator;
 import ua.foxminded.schoolconsoleapp.generatedata.GroupGenerator;
@@ -22,7 +23,7 @@ import ua.foxminded.schoolconsoleapp.generatedata.service.GroupService;
 import ua.foxminded.schoolconsoleapp.generatedata.service.StudentService;
 
 public class SchoolScheduleApplication {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, DAOException {
 	StartDAO startDAO = new StartDAO();
 
 	GroupDAO groupDAO = new JDBCGroupDAO(new ConnectionProvider());
@@ -37,7 +38,7 @@ public class SchoolScheduleApplication {
 	CourseService courseService = new CourseService(courseDAO, coursGenerator);
 	StudentService studentService = new StudentService(studentDao, studentGenerator, new Random());
 	
-	Facade facade = new Facade(startDAO, groupService, courseService, studentService);
+	ApplicationFacade facade = new ApplicationFacade(startDAO, groupService, courseService, studentService);
 	
 	facade.prepareBase();
 	facade.workWithBase();
