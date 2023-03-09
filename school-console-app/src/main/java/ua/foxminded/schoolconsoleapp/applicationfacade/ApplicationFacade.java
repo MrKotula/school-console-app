@@ -1,4 +1,4 @@
-package ua.foxminded.schoolconsoleapp.facade;
+package ua.foxminded.schoolconsoleapp.applicationfacade;
 
 import ua.foxminded.schoolconsoleapp.dao.StartDAO;
 import ua.foxminded.schoolconsoleapp.exception.DAOException;
@@ -8,7 +8,7 @@ import ua.foxminded.schoolconsoleapp.generatedata.service.GroupService;
 import ua.foxminded.schoolconsoleapp.generatedata.service.StudentService;
 import ua.foxminded.schoolconsoleapp.menu.MenuStarter;
 
-public class Facade {
+public class ApplicationFacade {
     private static final String MESSAGE_START_PREPARE = "Starting to prepare the base. It can take some time ...";
     private static final String MESSAGE_FINISH_PREPARE = "Database prepared";
     private static final int NUMBER_STUDENTS = 200;
@@ -21,7 +21,7 @@ public class Facade {
     private CourseService courseService;
     private StudentService studentService;
 
-    public Facade(StartDAO startDAO, GroupService groupService,
+    public ApplicationFacade(StartDAO startDAO, GroupService groupService,
             CourseService courseService, StudentService studentService) {
         this.startDAO = startDAO;
         this.groupService = groupService;
@@ -31,8 +31,7 @@ public class Facade {
 
     public void prepareBase() throws DomainException {
         System.out.println(MESSAGE_START_PREPARE);
-        createTables();
-        fillTables();
+        fillTable();
         System.out.println(MESSAGE_FINISH_PREPARE);
     }
 
@@ -41,15 +40,7 @@ public class Facade {
         menu.startMenu();
     }
 
-    private void createTables() {
-        try {
-            startDAO.prepareTables();
-        } catch (DAOException e) {
-            throw new DomainException(MESSAGE_EXCEPTION_CREATE_TABLES, e);
-        }
-    }
-
-    private void fillTables() {
+    private void fillTable() {
         groupService.createTestGroups(NUMBER_GROUPS);
         courseService.createTestCourses(NUMBER_COURSES);
         studentService.createTestStudents(NUMBER_STUDENTS);
