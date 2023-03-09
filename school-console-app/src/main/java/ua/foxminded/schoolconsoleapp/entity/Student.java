@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Student {
     private Integer studentId;
     private Integer groupId;
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
     
     public Student(Builder builder) {
 	this.studentId = builder.studentId;
@@ -41,14 +41,6 @@ public class Student {
 
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     @Override

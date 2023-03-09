@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Group {
     private Integer groupId;
-    private String groupName;
+    private final String groupName;
     
     public Group(Builder builder) {
 	this.groupId = builder.groupId;
@@ -25,10 +25,6 @@ public class Group {
 
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
     }
 
     @Override

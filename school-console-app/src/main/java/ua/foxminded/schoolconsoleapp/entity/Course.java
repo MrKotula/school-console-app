@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Course {
     private Integer courseId;
-    private String courseName;
-    private String courseDescription;
+    private final String courseName;
+    private final String courseDescription;
     
     private Course(Builder builder) {
 	this.courseId = builder.courseId;
@@ -31,14 +31,6 @@ public class Course {
 
     public void setCourseId(Integer courseId) {
         this.courseId = courseId;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public void setCourseDescription(String courseDescription) {
-        this.courseDescription = courseDescription;
     }
 
     @Override
