@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import ua.foxminded.schoolconsoleapp.dao.ConnectionProvider;
 import ua.foxminded.schoolconsoleapp.dao.DAO;
+import ua.foxminded.schoolconsoleapp.exception.DAOException;
 import ua.foxminded.schoolconsoleapp.exception.DomainException;
 
 public abstract class AbstractJdbcDAO<T> implements DAO<T, Integer> {
@@ -86,7 +87,7 @@ public abstract class AbstractJdbcDAO<T> implements DAO<T, Integer> {
     }
     
     @Override
-    public Optional<T> findById(Integer entityId) {
+    public Optional<T> findById(Integer entityId) throws DAOException {
         try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(findByIdQuery)) {
             statement.setInt(1, entityId);
@@ -94,7 +95,7 @@ public abstract class AbstractJdbcDAO<T> implements DAO<T, Integer> {
                 return resultSet.next() ? Optional.ofNullable(mapResultSetToEntity(resultSet)) : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new DomainException(e);
+            throw new DAOException(e);
         }
     }
 

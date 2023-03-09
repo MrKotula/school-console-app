@@ -67,7 +67,7 @@ class JDBCStudentDAOTest {
     }
 
     @Test
-    void saveShouldBeSaveStudentOnDataBase() {
+    void saveShouldBeSaveStudentOnDataBase() throws DAOException {
 	Student expected = Student.builder()
 		    .withGroupId(1)
 		    .withFirstName(TEST_NAME)
@@ -90,7 +90,7 @@ class JDBCStudentDAOTest {
     }
 
     @Test
-    void givenStudentWithGroup_whenUpdateStudent1WithGroupId_thenReturnNewStudentWithGroupId() {
+    void givenStudentWithGroup_whenUpdateStudent1WithGroupId_thenReturnNewStudentWithGroupId() throws DAOException {
 	jdbcStudentDAO.update(studentTestFirst);
 
 	assertEquals(studentTestFirst.getLastName(), jdbcStudentDAO.findById(1).get().getLastName());

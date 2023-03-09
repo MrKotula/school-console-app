@@ -82,7 +82,7 @@ class JDBCGroupDAOTest {
     }
 
     @Test
-    void deleteEntityShouldBeDeleteEntityFromDataBase() {
+    void deleteEntityShouldBeDeleteEntityFromDataBase() throws DAOException {
 	jdbcGroupDAO.deleteById(5);
 	Optional<Group> expected = Optional.empty();
 
@@ -90,7 +90,7 @@ class JDBCGroupDAOTest {
     }
 
     @Test
-    void updateEntityShouldBeUpdateDataIntoDatabase() {
+    void updateEntityShouldBeUpdateDataIntoDatabase() throws DAOException {
 	testGroup = Group.builder()
 		.withGroupId(3)
 		.withGroupName("S")

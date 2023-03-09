@@ -83,7 +83,7 @@ class JDBCCourseDAOTest {
     }
 
     @Test
-    void saveShouldBeAddNewEntityIntoDataBase() throws SQLException {
+    void saveShouldBeAddNewEntityIntoDataBase() throws SQLException, DAOException {
 	Course expected = testCourseMath;
 	jdbcCourseDAO.add(expected);
 	Course actual = jdbcCourseDAO.findById(3).get();
@@ -92,7 +92,7 @@ class JDBCCourseDAOTest {
     }
 
     @Test
-    void updateEntityShouldBeUpdateDateOfCourseIntoDataBase() {
+    void updateEntityShouldBeUpdateDateOfCourseIntoDataBase() throws DAOException {
 	Course expected = Course.builder()
 		.withCourseId(5)
 		.withCourseName("math")
@@ -112,7 +112,7 @@ class JDBCCourseDAOTest {
     }
 
     @Test
-    void findByIdShouldBeReturnEntityFromDataBase() {
+    void findByIdShouldBeReturnEntityFromDataBase() throws DAOException {
 	Course expected = testCourseMath;
 	Course actual = jdbcCourseDAO.findById(1).get();
 
@@ -120,7 +120,7 @@ class JDBCCourseDAOTest {
     }
 
     @Test
-    void deleteEntityShouldBeDeleteCourseFromDataBase() {
+    void deleteEntityShouldBeDeleteCourseFromDataBase() throws DAOException {
 	jdbcCourseDAO.deleteById(9);
 	Optional<Course> expected = Optional.empty();
 
